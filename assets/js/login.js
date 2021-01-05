@@ -9,19 +9,34 @@ $(function() {
         $('.reg-box').hide()
     })
 
-    //校验规则
+    // 校验规则
+    var form = layui.form
+        // 通过form.varify()函数自定义校验规则
+    form.verify({
+        pwd: [/^[\S]{6,12}$/, '密码必须6到12位且不能出现空格'],
+        // 校验两次密码是否一致的规则
+        repwd: function(value) {
+            let pwd = $('.reg-box [name=password]').val()
+            if (pwd !== value) {
+                return '两次密码不一致!'
+            }
+        }
+    })
 
-    // 提交表单监听事件
+    // 注册表单监听事件
     $("#form_reg").on("submit", function(e) {
         //  阻止默认的提交行为
         e.preventDefault()
             // 发出ajax的post请求
         let data = {
-            username: $('#form_reg[name=username]').val(),
-            password: $("#form_reg[name=password]").val()
+            username: $('#form_reg [name=username]').val(),
+            password: $("#form_reg [name=password]").val()
         }
         $.post('/api/reguser', data, function(res) {
-
+            if (res.status !== 0) {
+                return '注册失败'
+            }
+            alert('注册成功')
         })
     })
 
