@@ -11,9 +11,10 @@ $(function() {
 
     // 校验规则
     var form = layui.form
+    var layer = layui.layer
         // 通过form.varify()函数自定义校验规则
     form.verify({
-        pwd: [/^[\S]{6,12}$/, '密码必须6到12位且不能出现空格'],
+        pwd: [/^[\S]{6,12}$/, '密码必须6到12位,且不能出现空格'],
         // 校验两次密码是否一致的规则
         repwd: function(value) {
             let pwd = $('.reg-box [name=password]').val()
@@ -30,13 +31,14 @@ $(function() {
             // 发出ajax的post请求
         let data = {
             username: $('#form_reg [name=username]').val(),
-            password: $("#form_reg [name=password]").val()
+            password: $('#form_reg [name=password]').val()
         }
         $.post('/api/reguser', data, function(res) {
             if (res.status !== 0) {
-                return '注册失败'
+                return layer.msg(res.message)
             }
-            alert('注册成功')
+            layer.msg('注册成功，请登录！')
+            $('#link_login').click()
         })
     })
 
